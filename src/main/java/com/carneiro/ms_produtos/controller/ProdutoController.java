@@ -6,7 +6,6 @@ import com.carneiro.ms_produtos.business.service.ProdutoService;
 import com.carneiro.ms_produtos.infrastructure.entity.Produto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +29,14 @@ public class ProdutoController {
     @GetMapping("/{id}")
     public ProdutoResponseDTO buscarProdutoPorId(@PathVariable Long id){
         return produtoService.buscarProdutoPorId(id);
+    }
+    @PutMapping("/{id}")
+    public ProdutoResponseDTO atualizarProduto(@PathVariable Long id, @RequestBody @Valid ProdutoRequestDTO dto){
+        return produtoService.atualizarProduto(id, dto);
+    }
+    @DeleteMapping("/{id}")
+    public void delatarProduto(@PathVariable Long id){
+        produtoService.deletaProdutoPorId(id);
     }
 
 }
