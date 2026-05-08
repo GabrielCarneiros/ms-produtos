@@ -44,4 +44,10 @@ public class ProdutoService {
             return produtoConverter.paraResponseDTO(produtoAtualizado);
     }
 
+    public void deletaProdutoPorId(Long id){
+        Produto produto = produtoRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Produto não encontrado"));
+        produtoRepository.delete(produto);
+    }
+
 }
