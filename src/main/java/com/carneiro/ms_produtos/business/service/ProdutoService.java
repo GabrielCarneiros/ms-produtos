@@ -9,6 +9,8 @@ import com.carneiro.ms_produtos.infrastructure.exceptions.ResourceNotFoundExcept
 import com.carneiro.ms_produtos.infrastructure.repository.CategoriaRepository;
 import com.carneiro.ms_produtos.infrastructure.repository.ProdutoRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,10 @@ public class ProdutoService {
     private final ProdutoConverter produtoConverter;
     private final CategoriaRepository categoriaRepository;
 
-    public List<Produto> listarProdutos(){
-        return produtoRepository.findAll();
+    public Page<ProdutoResponseDTO> listarProdutos(Pageable pageable){
+        Page<Produto> produtos = produtoRepository.findAll(pageable);
+        return  produtos.map(produtoConverter::paraResponseDTO);
+
     }
 
     public ProdutoResponseDTO criarProduto(ProdutoRequestDTO dto){
@@ -54,6 +58,18 @@ public class ProdutoService {
         Produto produto = produtoRepository.findById(id).orElseThrow(
                 ()-> new ResourceNotFoundException("Produto não encontrado"));
         produtoRepository.delete(produto);
+    }
+
+    public List<ProdutoResponseDTO> buscarProdutosPorCategoria(Long categoriaId){
+        categoriaRepository.findById(categoriaId).orElseThrow(
+                ()-> new ResourceNotFoundException("Categoria não encontrada"));
+        List<Produto> produtos = produtoRepository.findByCategoriaId(categoriaId);
+
+        return produtos.stream().map(produtoConverter::paraResponseDTO).toList();
+    }
+    public List<ProdutoResponseDTO> buscarProdutosPorNome(String nome){
+        List<Produto> produtos = produtoRepository.findByNomeContainingIgnoreCase(nome);
+        return produtos.stream().map(produtoConverter::paraResponseDTO).toList();
     }
 
 

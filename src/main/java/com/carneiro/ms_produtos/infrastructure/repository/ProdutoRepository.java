@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     List<Produto> findByNomeContainingIgnoreCase(String nome);
+    List<Produto> findByCategoriaId(Long id);
 }
