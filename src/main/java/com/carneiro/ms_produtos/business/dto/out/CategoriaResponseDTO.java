@@ -1,24 +1,16 @@
 package com.carneiro.ms_produtos.business.dto.out;
 
+import jakarta.persistence.Column;
 import lombok.*;
-
-import java.math.BigDecimal;
-
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProdutoResponseDTO {
+public class CategoriaResponseDTO {
 
     private Long id;
 
     private String nome;
-
-    private String descricao;
-
-    private BigDecimal preco;
-
-    private Integer quantidade;
 }

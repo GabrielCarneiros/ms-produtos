@@ -1,10 +1,10 @@
 package com.carneiro.ms_produtos.infrastructure.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,6 +19,7 @@ public class Categoria {
     private Long id;
     @Column(nullable = false)
     private String nome;
+    @JsonIgnore
     @OneToMany(mappedBy = "categoria")
     private List<Produto>produtos;
 }

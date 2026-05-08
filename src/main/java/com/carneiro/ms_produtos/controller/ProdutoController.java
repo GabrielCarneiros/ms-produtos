@@ -6,6 +6,7 @@ import com.carneiro.ms_produtos.business.service.ProdutoService;
 import com.carneiro.ms_produtos.infrastructure.entity.Produto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,20 +24,21 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ProdutoResponseDTO criarProduto(@RequestBody @Valid ProdutoRequestDTO dto){
-        return produtoService.criarProduto(dto);
+    public ResponseEntity<ProdutoResponseDTO> criarProduto(@RequestBody @Valid ProdutoRequestDTO dto){
+        return ResponseEntity.ok(produtoService.criarProduto(dto));
     }
     @GetMapping("/{id}")
-    public ProdutoResponseDTO buscarProdutoPorId(@PathVariable Long id){
-        return produtoService.buscarProdutoPorId(id);
+    public ResponseEntity<ProdutoResponseDTO> buscarProdutoPorId(@PathVariable Long id){
+        return ResponseEntity.ok(produtoService.buscarProdutoPorId(id));
     }
     @PutMapping("/{id}")
-    public ProdutoResponseDTO atualizarProduto(@PathVariable Long id, @RequestBody @Valid ProdutoRequestDTO dto){
-        return produtoService.atualizarProduto(id, dto);
+    public ResponseEntity<ProdutoResponseDTO> atualizarProduto(@PathVariable Long id, @RequestBody @Valid ProdutoRequestDTO dto){
+        return ResponseEntity.ok(produtoService.atualizarProduto(id, dto));
     }
     @DeleteMapping("/{id}")
-    public void delatarProduto(@PathVariable Long id){
+    public ResponseEntity<Void> delatarProduto(@PathVariable Long id){
         produtoService.deletaProdutoPorId(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
