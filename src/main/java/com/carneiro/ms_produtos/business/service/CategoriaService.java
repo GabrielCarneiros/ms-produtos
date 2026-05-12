@@ -4,12 +4,11 @@ import com.carneiro.ms_produtos.business.converter.CategoriaConverter;
 import com.carneiro.ms_produtos.business.dto.CategoriaRequestDTO;
 import com.carneiro.ms_produtos.business.dto.out.CategoriaResponseDTO;
 import com.carneiro.ms_produtos.infrastructure.entity.Categoria;
-import com.carneiro.ms_produtos.infrastructure.exceptions.IllegalStateException;
+import com.carneiro.ms_produtos.infrastructure.exceptions.BusinessException;
 import com.carneiro.ms_produtos.infrastructure.exceptions.ResourceNotFoundException;
 import com.carneiro.ms_produtos.infrastructure.repository.CategoriaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class CategoriaService {
                 ()-> new ResourceNotFoundException("Categoria não encontrada"));
 
         if (!categoria.getProdutos().isEmpty()){
-            throw new IllegalStateException("Não é possível deletar categoria com produtos vinculados");
+            throw new BusinessException("Não é possível deletar categoria com produtos vinculados");
         }
 
         categoriaRepository.delete(categoria);

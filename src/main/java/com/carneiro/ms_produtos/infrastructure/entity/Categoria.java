@@ -19,7 +19,7 @@ public class Categoria {
     private Long id;
     @Column(nullable = false)
     private String nome;
-    @JsonIgnore
     @OneToMany(mappedBy = "categoria")
+    @JsonIgnore
     private List<Produto>produtos;
 }
