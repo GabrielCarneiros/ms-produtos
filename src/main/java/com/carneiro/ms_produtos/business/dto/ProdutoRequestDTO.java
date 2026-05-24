@@ -1,6 +1,5 @@
 package com.carneiro.ms_produtos.business.dto;
 
-import com.carneiro.ms_produtos.infrastructure.entity.Categoria;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

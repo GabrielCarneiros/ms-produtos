@@ -5,6 +5,7 @@ import com.carneiro.ms_produtos.business.dto.out.ProdutoResponseDTO;
 import com.carneiro.ms_produtos.business.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,7 @@ public class ProdutoController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Cadastrar produtos", description = "Cadastra um novo produto")
     @ApiResponse(responseCode = "201", description = "Produtos cadastrados com sucesso")
     @ApiResponse(responseCode = "400", description = "Dados Invalidos")
@@ -47,6 +49,7 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.buscarProdutoPorId(id));
     }
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Atualizar Produto", description = "Atualiza por id um produto especifico")
     @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso")
     @ApiResponse(responseCode = "404", description = "Produto ou categoria não encontrados")
@@ -55,6 +58,7 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.atualizarProduto(id, dto));
     }
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Deletar Produto", description = "Deleta um produto específico")
     @ApiResponse(responseCode = "200", description = "Produto excluido com sucesso")
     @ApiResponse(responseCode = "400", description = "Produto não encontrado")
