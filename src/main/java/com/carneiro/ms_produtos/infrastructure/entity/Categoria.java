@@ -1,5 +1,6 @@
 package com.carneiro.ms_produtos.infrastructure.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,5 +20,6 @@ public class Categoria {
     @Column(nullable = false)
     private String nome;
     @OneToMany(mappedBy = "categoria")
+    @JsonIgnore
     private List<Produto>produtos;
 }

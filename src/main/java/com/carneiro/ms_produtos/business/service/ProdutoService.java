@@ -1,4 +1,76 @@
 package com.carneiro.ms_produtos.business.service;
 
+import com.carneiro.ms_produtos.business.converter.ProdutoConverter;
+import com.carneiro.ms_produtos.business.dto.ProdutoRequestDTO;
+import com.carneiro.ms_produtos.business.dto.out.ProdutoResponseDTO;
+import com.carneiro.ms_produtos.infrastructure.entity.Categoria;
+import com.carneiro.ms_produtos.infrastructure.entity.Produto;
+import com.carneiro.ms_produtos.infrastructure.exceptions.ResourceNotFoundException;
+import com.carneiro.ms_produtos.infrastructure.repository.CategoriaRepository;
+import com.carneiro.ms_produtos.infrastructure.repository.ProdutoRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@AllArgsConstructor
 public class ProdutoService {
+    private final ProdutoRepository produtoRepository;
+    private final ProdutoConverter produtoConverter;
+    private final CategoriaRepository categoriaRepository;
+
+    public Page<ProdutoResponseDTO> listarProdutos(Pageable pageable){
+        Page<Produto> produtos = produtoRepository.findAll(pageable);
+        return  produtos.map(produtoConverter::paraResponseDTO);
+
+    }
+
+    public ProdutoResponseDTO criarProduto(ProdutoRequestDTO dto){
+        Categoria categoria = categoriaRepository.findById(dto.getCategoriaId()).orElseThrow(
+                ()-> new ResourceNotFoundException("Categoria não encontrada"));
+        Produto produto = produtoConverter.paraEntity(dto);
+        produto.setCategoria(categoria);
+        Produto produtoSalvo = produtoRepository.save(produto);
+        return produtoConverter.paraResponseDTO(produtoSalvo);
+    }
+    public ProdutoResponseDTO buscarProdutoPorId(Long id){
+        Produto produto = produtoRepository
+                .findById(id).orElseThrow(() ->
+                        new ResourceNotFoundException("Produto não encontrado"));
+        return produtoConverter.paraResponseDTO(produto);
+    }
+    public ProdutoResponseDTO atualizarProduto(Long id, ProdutoRequestDTO dto){
+       Produto produto = produtoRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("Produto não encontrado"));
+            produto.setNome(dto.getNome());
+            produto.setDescricao(dto.getDescricao());
+            produto.setPreco(dto.getPreco());
+            produto.setQuantidade(dto.getQuantidade());
+
+            Produto produtoAtualizado = produtoRepository.save(produto);
+            return produtoConverter.paraResponseDTO(produtoAtualizado);
+    }
+
+    public void deletaProdutoPorId(Long id){
+        Produto produto = produtoRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Produto não encontrado"));
+        produtoRepository.delete(produto);
+    }
+
+    public List<ProdutoResponseDTO> buscarProdutosPorCategoria(Long categoriaId){
+        categoriaRepository.findById(categoriaId).orElseThrow(
+                ()-> new ResourceNotFoundException("Categoria não encontrada"));
+        List<Produto> produtos = produtoRepository.findByCategoriaId(categoriaId);
+
+        return produtos.stream().map(produtoConverter::paraResponseDTO).toList();
+    }
+    public List<ProdutoResponseDTO> buscarProdutosPorNome(String nome){
+        List<Produto> produtos = produtoRepository.findByNomeContainingIgnoreCase(nome);
+        return produtos.stream().map(produtoConverter::paraResponseDTO).toList();
+    }
+
+
 }
